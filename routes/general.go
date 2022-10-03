@@ -1,25 +1,45 @@
 package routes
 
 import (
+	"erukunrukun/config"
+	"erukunrukun/models"
 	"fmt"
 	"os"
-	"sewaAset/config"
-	"sewaAset/models"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
+type LoginRequest struct {
+	Username  string    `json:"username"`
+	FullName  string    `json:"full_name"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
+	DateBirth time.Time `json:"date_birth"`
+	AdminRole bool      `gorm:"default:0"`
+}
+
 func Login(c *gin.Context) {
-	var userData models.User
+	db := config.InitDB()
+	// var userData models.User
 
-	nik := c.PostForm("nik")
-	dateStr := c.PostForm("date_birth")
-	format := "2006-01-02"
-	date, _ := time.Parse(format, dateStr)
+	// username := c.PostForm("username")
+	// password := c.PostForm("password")
 
-	if err := config.DB.Where("nik = ? AND date_birth = ?", nik, date).First(&userData).Error; err != nil {
+	var loginReq models.User
+
+	if err := c.BindJSON(&loginReq); err != nil {
+		fmt.Println("ERROR BINDJSON", err)
+	}
+
+	username := loginReq.Username
+	password := loginReq.Password
+
+	fmt.Println(username)
+	fmt.Println(password)
+
+	if err := db.Where("username = ? AND password = ?", username, password).First(&loginReq).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",
 			"message": "record not found",
@@ -28,11 +48,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(userData)
-	var jwtToken = createToken(&userData)
+	fmt.Println(loginReq)
+	var jwtToken = createToken(&models.User{})
 
 	c.JSON(200, gin.H{
-		"data":    userData,
+		"data":    loginReq,
 		"token":   jwtToken,
 		"message": "Berhasil Login",
 	})
