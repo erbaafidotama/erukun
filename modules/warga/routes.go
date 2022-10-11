@@ -1,8 +1,7 @@
-package routes
+package warga
 
 import (
 	"erukunrukun/config"
-	"erukunrukun/models"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +23,7 @@ type wargaMasterRequest struct {
 
 func GetListWarga(c *gin.Context) {
 	db := config.InitDB()
-	wargas := []models.WargaMaster{}
+	wargas := []WargaMasterModel{}
 
 	// select * from User
 	if err := db.Find(&wargas).Error; err != nil {
@@ -46,7 +45,7 @@ func GetListWarga(c *gin.Context) {
 
 func GetOneAnakByUuid(c *gin.Context) {
 	db := config.InitDB()
-	var warga models.WargaMaster
+	var warga WargaMasterModel
 
 	uuid := c.Param("warga_uuid")
 	if err := db.Where("warga_uuid = ?", uuid).First(&warga).Error; err != nil {
@@ -69,7 +68,7 @@ func PostWarga(c *gin.Context) {
 		fmt.Println("ERROR BINDJSON", err)
 	}
 
-	warga := models.WargaMaster{
+	warga := WargaMasterModel{
 		WargaUuid:      uuid.New(),
 		NamaLengkap:    wargaMasterReq.NamaLengkap,
 		NoKk:           wargaMasterReq.NoKk,
@@ -101,7 +100,7 @@ func UpdateWarga(c *gin.Context) {
 	// get id from url
 	wargaUuid := c.Param("warga_uuid")
 
-	var dataWarga models.WargaMaster
+	var dataWarga WargaMasterModel
 	if err := db.Where("warga_uuid = ?", wargaUuid).First(&dataWarga).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",
@@ -111,7 +110,7 @@ func UpdateWarga(c *gin.Context) {
 		return
 	}
 
-	db.Model(&dataWarga).Where("warga_uuid = ?", wargaUuid).Updates(models.WargaMaster{
+	db.Model(&dataWarga).Where("warga_uuid = ?", wargaUuid).Updates(WargaMasterModel{
 		NamaLengkap:    wargaMasterReq.NamaLengkap,
 		NoKk:           wargaMasterReq.NoKk,
 		Nik:            wargaMasterReq.Nik,
@@ -135,7 +134,7 @@ func DeleteWarga(c *gin.Context) {
 	// get id from url
 	wargaUuid := c.Param("warga_uuid")
 
-	var dataWarga models.WargaMaster
+	var dataWarga WargaMasterModel
 	if err := db.Where("warga_uuid = ?", wargaUuid).First(&dataWarga).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",

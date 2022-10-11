@@ -1,8 +1,7 @@
-package routes
+package lookup
 
 import (
 	"erukunrukun/config"
-	"erukunrukun/models"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,7 @@ type LookupRequest struct {
 
 func GetListLookup(c *gin.Context) {
 	db := config.InitDB()
-	lookups := []models.Lookup{}
+	lookups := []LookupModel{}
 
 	// select * from lookups
 	if err := db.Find(&lookups).Error; err != nil {
@@ -39,7 +38,7 @@ func GetListLookup(c *gin.Context) {
 
 func GetOneLookupByUuid(c *gin.Context) {
 	db := config.InitDB()
-	var lookup models.Lookup
+	var lookup LookupModel
 
 	uuid := c.Param("lookup_uuid")
 	if err := db.Where("lookup_uuid = ?", uuid).First(&lookup).Error; err != nil {
@@ -62,7 +61,7 @@ func PostLookup(c *gin.Context) {
 		fmt.Println("ERROR BINDJSON", err)
 	}
 
-	lookup := models.Lookup{
+	lookup := LookupModel{
 		LookupUuid:   uuid.New(),
 		LookupCode:   LookupReq.LookupCode,
 		Keterangan:   LookupReq.Keterangan,
@@ -87,7 +86,7 @@ func UpdateLookup(c *gin.Context) {
 	// get id from url
 	lookupUuid := c.Param("lookup_uuid")
 
-	var dataLookup models.Lookup
+	var dataLookup LookupModel
 	if err := db.Where("lookup_uuid = ?", lookupUuid).First(&lookupReq).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",
@@ -97,7 +96,7 @@ func UpdateLookup(c *gin.Context) {
 		return
 	}
 
-	db.Model(&lookupReq).Where("lookup_uuid = ?", lookupUuid).Updates(models.Lookup{
+	db.Model(&lookupReq).Where("lookup_uuid = ?", lookupUuid).Updates(LookupModel{
 		LookupCode:   lookupReq.LookupCode,
 		Keterangan:   lookupReq.Keterangan,
 		StatusActive: lookupReq.StatusActive,
@@ -114,7 +113,7 @@ func DeleteLookup(c *gin.Context) {
 	// get id from url
 	lookupUuid := c.Param("lookup_uuid")
 
-	var dataLookup models.Lookup
+	var dataLookup LookupModel
 	if err := db.Where("lookup_uuid = ?", lookupUuid).First(&dataLookup).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",

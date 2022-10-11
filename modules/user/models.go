@@ -1,4 +1,4 @@
-package models
+package user
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type UserModel struct {
 	gorm.Model
 	UserUuid  uuid.UUID `gorm:"type:uuid" json:"user_uuid"`
 	Username  string
@@ -16,4 +16,8 @@ type User struct {
 	Email     string
 	DateBirth time.Time `json:"date_birth"`
 	AdminRole bool      `gorm:"default:0"`
+}
+
+func (UserModel) TableName() string {
+	return "14.users"
 }

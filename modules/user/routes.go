@@ -1,8 +1,7 @@
-package routes
+package user
 
 import (
 	"erukunrukun/config"
-	"erukunrukun/models"
 	"fmt"
 	"time"
 
@@ -21,7 +20,7 @@ type UserReqest struct {
 
 func GetUser(c *gin.Context) {
 	db := config.InitDB()
-	users := []models.User{}
+	users := []UserModel{}
 
 	// select * from User
 	if err := db.Find(&users).Error; err != nil {
@@ -49,7 +48,7 @@ func PostUser(c *gin.Context) {
 		fmt.Println("ERROR BINDJSON", err)
 	}
 
-	user := models.User{
+	user := UserModel{
 		Username:  userReq.Username,
 		Password:  userReq.Password,
 		Email:     userReq.Email,
@@ -81,7 +80,7 @@ func UpdateUser(c *gin.Context) {
 	// get id from url
 	userId := c.Param("id")
 
-	var dataUser models.User
+	var dataUser UserModel
 	if err := db.Where("id = ?", userId).First(&dataUser).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",
@@ -91,7 +90,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	db.Model(&dataUser).Where("id = ?", userId).Updates(models.User{
+	db.Model(&dataUser).Where("id = ?", userId).Updates(UserModel{
 		FullName:  userReq.FullName,
 		DateBirth: userReq.DateBirth,
 		AdminRole: userReq.AdminRole,
@@ -111,7 +110,7 @@ func DeleteUser(c *gin.Context) {
 	// get id from url
 	userId := c.Param("id")
 
-	var dataUser models.User
+	var dataUser UserModel
 	if err := db.Where("id = ?", userId).First(&dataUser).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",

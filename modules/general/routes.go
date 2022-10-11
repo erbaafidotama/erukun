@@ -1,8 +1,8 @@
-package routes
+package general
 
 import (
 	"erukunrukun/config"
-	"erukunrukun/models"
+	"erukunrukun/modules/user"
 	"fmt"
 	"os"
 	"time"
@@ -27,7 +27,7 @@ func Login(c *gin.Context) {
 	// username := c.PostForm("username")
 	// password := c.PostForm("password")
 
-	var loginReq models.User
+	var loginReq user.UserModel
 
 	if err := c.BindJSON(&loginReq); err != nil {
 		fmt.Println("ERROR BINDJSON", err)
@@ -49,7 +49,7 @@ func Login(c *gin.Context) {
 	}
 
 	fmt.Println(loginReq)
-	var jwtToken = createToken(&models.User{})
+	var jwtToken = createToken(&user.UserModel{})
 
 	c.JSON(200, gin.H{
 		"data":    loginReq,
@@ -58,7 +58,7 @@ func Login(c *gin.Context) {
 	})
 }
 
-func createToken(user *models.User) string {
+func createToken(user *user.UserModel) string {
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":    user.ID,
 		"admin_role": user.AdminRole,

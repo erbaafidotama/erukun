@@ -1,7 +1,6 @@
 package config
 
 import (
-	"erukunrukun/models"
 	"fmt"
 	"os"
 
@@ -71,9 +70,9 @@ func InitDB() *gorm.DB {
 		panic("Connecting database failed:" + err.Error())
 	}
 
-	db.AutoMigrate(&models.WargaMaster{})
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.Lookup{})
-	db.AutoMigrate(&models.LookupItem{})
+	// db.AutoMigrate(&models.WargaMaster{})
+	// db.AutoMigrate(&models.Lookup{})
+	// db.AutoMigrate(&models.LookupItem{})
+	// db.AutoMigrate(&user.UserModel{})
 	return db
 }

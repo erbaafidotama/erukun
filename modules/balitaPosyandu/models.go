@@ -1,4 +1,4 @@
-package models
+package balitaPosyandu
 
 import (
 	"github.com/google/uuid"
@@ -6,7 +6,7 @@ import (
 )
 
 // Warga model
-type BalitaPosyanduMaster struct {
+type BalitaPosyanduMasterModel struct {
 	gorm.Model
 	BalitaPosyanduUuid uuid.UUID `gorm:"type:uuid" json:"balita_posyandu_uuid"`
 	WargaID            int       `json:"warga_id"`
