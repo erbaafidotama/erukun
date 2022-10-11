@@ -70,10 +70,10 @@ func InitDB() *gorm.DB {
 	if err != nil {
 		panic("Connecting database failed:" + err.Error())
 	}
-	// db.AutoMigrate(&models.Account{})
+
 	db.AutoMigrate(&models.WargaMaster{})
-	// db.AutoMigrate(&models.Lookup{})
-	// db.AutoMigrate(&models.LookupDetail{})
-	// db.AutoMigrate(&models.AllAnak{})
+	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Lookup{})
+	db.AutoMigrate(&models.LookupItem{})
 	return db
 }
