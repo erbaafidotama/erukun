@@ -4,23 +4,22 @@ import (
 	"erukunrukun/config"
 	"erukunrukun/models"
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 type wargaMasterRequest struct {
-	NamaLengkap    string    `json:"nama_lengkap"`
-	NoKk           string    `json:"no_kk"`
-	Nik            string    `json:"nik"`
-	TempatLahir    string    `json:"tempat_lahir"`
-	TanggalLahir   time.Time `json:"tanggal_lahir"`
-	JenisKelaminId string    `json:"jenis_kelamin_id"`
-	Alamat         string    `json:"alamat"`
-	Rt             string    `json:"rt"`
-	Rw             string    `json:"rw"`
-	NoRumah        string    `json:"no_rumah"`
+	NamaLengkap    string `json:"nama_lengkap"`
+	NoKk           string `json:"no_kk"`
+	Nik            string `json:"nik"`
+	TempatLahir    string `json:"tempat_lahir"`
+	TanggalLahir   string `json:"tanggal_lahir"`
+	JenisKelaminId int    `json:"jenis_kelamin_id"`
+	Alamat         string `json:"alamat"`
+	Rt             string `json:"rt"`
+	Rw             string `json:"rw"`
+	NoRumah        string `json:"no_rumah"`
 }
 
 func GetListWarga(c *gin.Context) {
@@ -45,21 +44,22 @@ func GetListWarga(c *gin.Context) {
 	})
 }
 
-// func GetOneAnakByUuid(c *gin.Context) {
-// 	var warga models.WargaMaster
+func GetOneAnakByUuid(c *gin.Context) {
+	db := config.InitDB()
+	var warga models.WargaMaster
 
-// 	uuid := c.Param("warga_uuid")
-// 	if err := config.DB.Where("warga_uuid = ?", uuid).First(&warga).Error; err != nil {
-// 		c.JSON(500, gin.H{
-// 			"status": "gagal get",
-// 		})
-// 	} else {
-// 		c.JSON(200, gin.H{
-// 			"status": "berhasil get",
-// 			"data":   warga,
-// 		})
-// 	}
-// }
+	uuid := c.Param("warga_uuid")
+	if err := db.Where("warga_uuid = ?", uuid).First(&warga).Error; err != nil {
+		c.JSON(500, gin.H{
+			"status": "gagal get",
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"status": "berhasil get",
+			"data":   warga,
+		})
+	}
+}
 
 func PostWarga(c *gin.Context) {
 	db := config.InitDB()
@@ -97,6 +97,7 @@ func PostWarga(c *gin.Context) {
 
 func UpdateWarga(c *gin.Context) {
 	db := config.InitDB()
+	var wargaMasterReq wargaMasterRequest
 	// get id from url
 	wargaUuid := c.Param("warga_uuid")
 
@@ -110,22 +111,17 @@ func UpdateWarga(c *gin.Context) {
 		return
 	}
 
-	// convert string date to date db
-	dateStr := c.PostForm("tanggal_lahir")
-	format := "2006-01-02"
-	date, _ := time.Parse(format, dateStr)
-
 	db.Model(&dataWarga).Where("warga_uuid = ?", wargaUuid).Updates(models.WargaMaster{
-		NamaLengkap:    c.PostForm("name_lengkap"),
-		NoKk:           c.PostForm("no_kk"),
-		Nik:            c.PostForm("nik"),
-		TempatLahir:    c.PostForm("tempat_lahir"),
-		JenisKelaminId: c.PostForm("jenis_kelamin_id"),
-		Alamat:         c.PostForm("alamat"),
-		Rt:             c.PostForm("rt"),
-		Rw:             c.PostForm("rw"),
-		NoRumah:        c.PostForm("no_rumah"),
-		TanggalLahir:   date,
+		NamaLengkap:    wargaMasterReq.NamaLengkap,
+		NoKk:           wargaMasterReq.NoKk,
+		Nik:            wargaMasterReq.Nik,
+		TempatLahir:    wargaMasterReq.TempatLahir,
+		TanggalLahir:   wargaMasterReq.TanggalLahir,
+		JenisKelaminId: wargaMasterReq.JenisKelaminId,
+		Alamat:         wargaMasterReq.Alamat,
+		Rt:             wargaMasterReq.Rt,
+		Rw:             wargaMasterReq.Rw,
+		NoRumah:        wargaMasterReq.NoRumah,
 	})
 
 	c.JSON(200, gin.H{

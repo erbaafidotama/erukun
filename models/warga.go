@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -15,8 +13,8 @@ type WargaMaster struct {
 	NoKk           string    `json:"no_kk"`
 	Nik            string    `json:"nik"`
 	TempatLahir    string    `json:"tempat_lahir"`
-	TanggalLahir   time.Time `json:"tanggal_lahir"`
-	JenisKelaminId string    `json:"jenis_kelamin_id"`
+	TanggalLahir   string    `json:"tanggal_lahir"`
+	JenisKelaminId int       `json:"jenis_kelamin_id"`
 	Alamat         string    `json:"alamat"`
 	Rt             string    `json:"rt"`
 	Rw             string    `json:"rw"`
