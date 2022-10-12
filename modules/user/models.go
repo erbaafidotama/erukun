@@ -1,8 +1,6 @@
 package user
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -14,10 +12,15 @@ type UserModel struct {
 	FullName  string
 	Password  string
 	Email     string
-	DateBirth time.Time `json:"date_birth"`
-	AdminRole bool      `gorm:"default:0"`
+	DateBirth string `json:"date_birth"`
+	AdminRole bool   `gorm:"default:0"`
 }
 
+//* untuk membuat table pada cutstom schema
+// func (UserModel) TableName() string {
+// 	return "14.users"
+// }
+
 func (UserModel) TableName() string {
-	return "14.users"
+	return "users" // overide nama table user_models -> users
 }

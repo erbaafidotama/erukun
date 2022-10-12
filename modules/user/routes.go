@@ -3,19 +3,19 @@ package user
 import (
 	"erukunrukun/config"
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type UserReqest struct {
-	Id        string    `json:"id"`
-	Username  string    `json:"username"`
-	FullName  string    `json:"full_name"`
-	Password  string    `json:"password"`
-	Email     string    `json:"email"`
-	DateBirth time.Time `json:"date_birth"`
-	AdminRole bool      `json:"admin_role"`
+	Id        string `json:"id"`
+	Username  string `json:"username"`
+	FullName  string `json:"full_name"`
+	Password  string `json:"password"`
+	Email     string `json:"email"`
+	DateBirth string `json:"date_birth"`
+	AdminRole bool   `json:"admin_role"`
 }
 
 func GetUser(c *gin.Context) {
@@ -49,6 +49,7 @@ func PostUser(c *gin.Context) {
 	}
 
 	user := UserModel{
+		UserUuid:  uuid.New(),
 		Username:  userReq.Username,
 		Password:  userReq.Password,
 		Email:     userReq.Email,
