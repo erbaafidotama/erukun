@@ -7,7 +7,7 @@ import (
 
 type UserModel struct {
 	gorm.Model
-	UserUuid  uuid.UUID `gorm:"type:uuid" json:"user_uuid"`
+	UserUuid  uuid.UUID `gorm:"primaryKey;type:uuid" json:"user_uuid"`
 	Username  string
 	FullName  string
 	Password  string
@@ -22,5 +22,5 @@ type UserModel struct {
 // }
 
 func (UserModel) TableName() string {
-	return "users" // overide nama table user_models -> users
+	return "master_users" // overide nama table user_models -> users
 }

@@ -83,11 +83,16 @@ func PostLookup(c *gin.Context) {
 func UpdateLookup(c *gin.Context) {
 	db := config.InitDB()
 	var lookupReq LookupRequest
+	if err := c.BindJSON(&lookupReq); err != nil {
+		fmt.Println("ERROR BINDJSON", err)
+	}
+
 	// get id from url
 	lookupUuid := c.Param("lookup_uuid")
+	fmt.Println(lookupUuid)
 
 	var dataLookup LookupModel
-	if err := db.Where("lookup_uuid = ?", lookupUuid).First(&lookupReq).Error; err != nil {
+	if err := db.Where("lookup_uuid = ?", lookupUuid).First(&dataLookup).Error; err != nil {
 		c.JSON(404, gin.H{
 			"status":  "error",
 			"message": "record not found",
@@ -96,7 +101,7 @@ func UpdateLookup(c *gin.Context) {
 		return
 	}
 
-	db.Model(&lookupReq).Where("lookup_uuid = ?", lookupUuid).Updates(LookupModel{
+	db.Model(&dataLookup).Where("lookup_uuid = ?", lookupUuid).Updates(LookupModel{
 		LookupCode:   lookupReq.LookupCode,
 		Keterangan:   lookupReq.Keterangan,
 		StatusActive: lookupReq.StatusActive,

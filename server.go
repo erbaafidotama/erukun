@@ -3,7 +3,6 @@ package main
 import (
 	"erukunrukun/config"
 	"erukunrukun/middleware"
-	"erukunrukun/migrations"
 	"erukunrukun/modules/general"
 	"erukunrukun/modules/lookup"
 	"erukunrukun/modules/user"
@@ -15,7 +14,7 @@ import (
 func main() {
 	//when server.go start, it will be run function InitDB (connecting to database)
 	config.InitDB()
-	migrations.Migration()
+	// migrations.Migration()
 
 	router := gin.New()
 	router.Use(middleware.CORSMiddleware())
